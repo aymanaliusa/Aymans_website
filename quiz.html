@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML History Quiz</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .quiz-container {
+            max-width: 850px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .question {
+            margin: 25px 0;
+            padding: 20px;
+            background: #f4f6fb;
+            border-radius: 10px;
+        }
+
+        .question label {
+            display: block;
+            margin: 10px 0;
+        }
+
+        .question input[type="text"] {
+            padding: 10px;
+            width: 90%;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        .quiz-button {
+            padding: 12px 22px;
+            background: #f5b82e;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 8px;
+        }
+
+        #timer {
+            font-weight: bold;
+            color: #174da5;
+            font-size: 20px;
+        }
+
+        #results {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .correct { color: green; }
+        .incorrect { color: #c62828; }
+    </style>
+</head>
+
+<body>
+
+<header class="site-header">
+    <a class="brand" href="index.html">HTML guide</a>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="beginning.html">Beginning</a>
+        <a href="evolution.html">Evolution</a>
+        <a href="concepts.html">Concepts</a>
+        <a href="quiz.html">Quiz</a>
+    </nav>
+</header>
+
+<main class="quiz-container">
+
+    <h1>History of HTML Quiz</h1>
+    <p>Test your knowledge of the history of HTML</p>
+
+    <p>Time remaining: <span id="timer">10:00</span></p>
+
+    <form id="quizForm">
+
+        <div class="question">
+            <h3>1. What does HTML stand for?</h3>
+            <input type="text" name="q1" placeholder="Type your answer">
+        </div>
+
+        <div class="question">
+            <h3>2. Who created HTML?</h3>
+            <label><input type="radio" name="q2" value="a"> Bill Gates</label>
+            <label><input type="radio" name="q2" value="b"> Tim Berners-Lee</label>
+            <label><input type="radio" name="q2" value="c"> Steve Jobs</label>
+        </div>
+
+        <div class="question">
+            <h3>3. In which year was the first version of HTML introduced?</h3>
+            <label><input type="radio" name="q3" value="a"> 1980</label>
+            <label><input type="radio" name="q3" value="b"> 1991</label>
+            <label><input type="radio" name="q3" value="c"> 2000</label>
+        </div>
+
+        <div class="question">
+            <h3>4. What is HTML mainly used for?</h3>
+            <label><input type="radio" name="q4" value="a"> Creating web page structure</label>
+            <label><input type="radio" name="q4" value="b"> Editing photos</label>
+            <label><input type="radio" name="q4" value="c"> Playing music</label>
+        </div>
+
+        <div class="question">
+            <h3>5. What does CSS control on a website?</h3>
+            <input type="text" name="q5" placeholder="Type your answer">
+        </div>
+
+        <div class="question">
+            <h3>6. Which version introduced major multimedia features?</h3>
+            <label><input type="radio" name="q6" value="a"> HTML 2.0</label>
+            <label><input type="radio" name="q6" value="b"> HTML5</label>
+            <label><input type="radio" name="q6" value="c"> HTML 1.0</label>
+        </div>
+
+        <div class="question">
+            <h3>7. Select all technologies commonly used to build modern websites.</h3>
+            <label><input type="checkbox" name="q7" value="html"> HTML</label>
+            <label><input type="checkbox" name="q7" value="css"> CSS</label>
+            <label><input type="checkbox" name="q7" value="js"> JavaScript</label>
+            <label><input type="checkbox" name="q7" value="paint"> Microsoft Paint</label>
+        </div>
+
+        <div class="question">
+            <h3>8. What is the latest major HTML standard commonly used today?</h3>
+            <label><input type="radio" name="q8" value="a"> HTML5</label>
+            <label><input type="radio" name="q8" value="b"> HTML 1.0</label>
+            <label><input type="radio" name="q8" value="c"> HTML 2.0</label>
+        </div>
+
+        <div class="question">
+            <h3>9. What is the name of the organization that develops web standards including HTML?</h3>
+            <input type="text" name="q9" placeholder="Type your answer">
+        </div>
+
+        <div class="question">
+            <h3>10. What does JavaScript add to a website?</h3>
+            <label><input type="radio" name="q10" value="a"> Interactivity</label>
+            <label><input type="radio" name="q10" value="b"> Only colors</label>
+            <label><input type="radio" name="q10" value="c"> Only text</label>
+        </div>
+
+        <button type="submit" class="quiz-button">Submit Quiz</button>
+        <button type="reset" class="quiz-button" id="resetBtn">Retake Quiz</button>
+
+    </form>
+
+    <div id="results" aria-live="polite"></div>
+
+</main>
+
+<script>
+    // Store the quiz start time and timer.
+    let timeLeft = 600;
+    let startTime = Date.now();
+    let submitted = false;
+
+    const timerDisplay = document.getElementById("timer");
+    const form = document.getElementById("quizForm");
+    const results = document.getElementById("results");
+
+    // Update the countdown every second.
+    const countdown = setInterval(function() {
+        if (submitted) return;
+
+        timeLeft--;
+
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+
+        timerDisplay.textContent =
+            minutes + ":" + String(seconds).padStart(2, "0");
+
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            gradeQuiz();
+        }
+    }, 1000);
+
+    // Check answers and calculate the final score.
+    function gradeQuiz() {
+        if (submitted) return;
+        submitted = true;
+        clearInterval(countdown);
+
+        const answers = {
+            q1: "hypertext markup language",
+            q2: "b",
+            q3: "b",
+            q4: "a",
+            q5: "style",
+            q6: "b",
+            q7: ["html", "css", "js"],
+            q8: "a",
+            q9: "w3c",
+            q10: "a"
+        };
+
+        let score = 0;
+        let review = "";
+
+        for (let i = 1; i <= 10; i++) {
+            let question = "q" + i;
+            let userAnswer = "";
+
+            if (question === "q7") {
+                userAnswer = Array.from(
+                    document.querySelectorAll('input[name="q7"]:checked')
+                ).map(input => input.value).sort();
+            } else {
+                let selected = document.querySelector(
+                    'input[name="' + question + '"]:checked'
+                );
+
+                let textInput = document.querySelector(
+                    'input[name="' + question + '"][type="text"]'
+                );
+
+                userAnswer = selected ? selected.value :
+                    (textInput ? textInput.value.trim().toLowerCase() : "");
+            }
+
+            let correct = false;
+
+            if (question === "q7") {
+                correct = JSON.stringify(userAnswer) ===
+                    JSON.stringify(answers.q7.slice().sort());
+            } else if (question === "q5") {
+                correct = userAnswer.includes("style");
+            } else if (question === "q9") {
+                correct = userAnswer.includes("w3c") ||
+                    userAnswer.includes("world wide web consortium");
+            } else {
+                correct = userAnswer === answers[question];
+            }
+
+            if (correct) score++;
+
+            review += `
+                <p class="${correct ? 'correct' : 'incorrect'}">
+                    Question ${i}: ${correct ? "Correct" : "Incorrect"}
+                </p>
+            `;
+        }
+
+        let elapsed = Math.floor((Date.now() - startTime) / 1000);
+        let elapsedMinutes = Math.floor(elapsed / 60);
+        let elapsedSeconds = elapsed % 60;
+
+        let passed = score >= 7;
+
+        results.innerHTML = `
+            <h2>${passed ? "You Passed!" : "Keep Practicing!"}</h2>
+            <h3>Your Score: ${score}/10</h3>
+            <p>${passed ? "Pass" : "Fail"} - Passing score: 7/10</p>
+            <p>Time spent: ${elapsedMinutes} minutes and
+            ${elapsedSeconds} seconds</p>
+            <h3>Answer Review</h3>
+            ${review}
+        `;
+
+        form.querySelectorAll("input").forEach(input => {
+            input.disabled = true;
+        });
+    }
+
+    // Submit the quiz.
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        gradeQuiz();
+    });
+
+    // Reset the quiz and start a new timer.
+    document.getElementById("resetBtn").addEventListener("click", function() {
+        setTimeout(function() {
+            submitted = false;
+            timeLeft = 600;
+            startTime = Date.now();
+            timerDisplay.textContent = "10:00";
+            results.innerHTML = "";
+            form.querySelectorAll("input").forEach(input => {
+                input.disabled = false;
+            });
+        }, 0);
+    });
+</script>
+
+</body>
+</html>
